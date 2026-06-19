@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
+    <!-- 线上部署在 /xiaochou 时由脚本注入 <base>；file:// 本地打开不要写死 base，否则会错指到 C:/xiaochou/... -->
+
     <meta name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
     <meta name="theme-color" content="#FAF7F2" />
@@ -96,10 +98,10 @@
                     </div>
                     <p class="s1-blow-msg" id="s1BlowMsg" hidden>OK👏👏👏, 1定会得偿所愿</p>
                     <div class="s1-panel__actions">
-                        <button type="button" class="btn btn--ghost btn--mic" id="btnMic" aria-label="长按约 1.5 秒开始许愿">
+                        <button type="button" class="btn btn--ghost btn--mic" id="btnMic" aria-label="长按约 1.5 秒，或点击开始许愿">
                             <span class="btn--mic__fill" aria-hidden="true"></span>
                             <span class="btn--mic__icon" aria-hidden="true"></span>
-                            <span class="btn--mic__label">长按开始许愿</span>
+                            <span class="btn--mic__label">长按/点击开始许愿</span>
                         </button>
                     </div>
                 </div>

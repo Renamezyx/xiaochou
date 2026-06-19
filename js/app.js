@@ -969,6 +969,13 @@
         } catch (err) { }
         clearMicHold();
       });
+      /* 短按/点击也可许愿：部分浏览器长按不稳定；长按成功打开后弹窗已显示，此处直接 return */
+      micBtn.addEventListener("click", function () {
+        var modal = $("modalWish");
+        if (modal && !modal.hasAttribute("hidden")) return;
+        clearMicHold();
+        openWishModal();
+      });
     }
 
     $("modalWishBack").addEventListener("click", closeWishModal);
