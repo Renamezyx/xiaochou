@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#FAF7F2" />
+    <title>HAPPY BIRTHDAY · XIAOCHOU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/app.css" />
+
+</head>
+
+<body>
+    <div class="app" id="app">
+        <!-- ========== Screen 1：单页状态机 ========== -->
+        <div id="screen1" class="screen screen--1 s1" data-phase="enter">
+            <!-- 背景装饰层：才艺后显示 -->
+            <div class="s1-deco" id="s1-deco" aria-hidden="true">
+                <div class="s1-deco__banner" id="s1-banner">
+                    <span>Happy Birthday · XiaoChou</span>
+                </div>
+                <div class="s1-deco__balloon s1-deco__balloon--a"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--b"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--c"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--d"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--e"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--f"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--g"></div>
+                <div class="s1-deco__balloon s1-deco__balloon--h"></div>
+                <div class="s1-deco__fw" id="s1-fw"></div>
+            </div>
+
+            <!-- 右上角音乐（延迟出现） -->
+            <!-- <button type="button" class="music-fab" id="musicFab" hidden aria-pressed="false" aria-label="播放或暂停音乐"
+                style="display: none !important;">
+                <span class="music-fab__dot" aria-hidden="true"></span>
+            </button> -->
+
+            <main class="s1-main">
+                <div class="s1-panel s1-panel--enter" data-show="enter">
+                    <div class="s1-panel__copy">
+                        <p class="s1-kicker">Act I</p>
+                        <h1 class="s1-hero"><br />嘘～先别问</h1>
+                        <p class="s1-lead">发现个有意思的东西</p>
+                    </div>
+                    <div class="s1-panel__actions">
+                        <button type="button" class="btn btn--primary" id="btnEnter">来, 跟我走</button>
+                    </div>
+                </div>
+
+                <div class="s1-panel s1-panel--talent" data-show="talent" hidden>
+                    <div class="s1-panel__copy">
+                        <p class="s1-kicker">Talent</p>
+                        <h2 class="s1-title">准备好啦？</h2>
+                        <p class="s1-lead">emm... 再配点首音乐吧</p>
+                    </div>
+                    <div class="s1-panel__actions">
+                        <button type="button" class="btn btn--primary" id="btnTalent">上DJ 上DJ</button>
+                    </div>
+                </div>
+
+                <div class="s1-panel s1-panel--more" data-show="post_talent" hidden>
+                    <div class="s1-panel__copy">
+                        <p class="s1-kicker">Hint</p>
+                        <h2 class="s1-title">嗯 就这个感觉，不过还少了点什么？</h2>
+                        <p class="s1-lead">也许是<b>.光</b>，也许是花，也许是一点点仪式感。</p>
+                    </div>
+                    <div class="s1-panel__actions">
+                        <button type="button" class="btn btn--primary" id="btnMore">来, 上点仪式感</button>
+                    </div>
+                </div>
+
+                <div class="s1-panel s1-panel--cake" data-show="cake" hidden>
+                    <div class="s1-panel__copy">
+                        <p class="s1-kicker">蛋糕来咯～</p>
+                        <h2 class="s1-title">先许个愿<br />再吹蜡烛哦</h2>
+                        <p class="s1-lead">蜡烛会自己亮起来；愿望先留在心里。</p>
+                    </div>
+                    <div class="s1-panel__body">
+                        <div class="cake" id="cake" data-age="25">
+                            <div class="cake__plate" aria-hidden="true"></div>
+                            <div class="cake__body"></div>
+                            <div class="cake__frost"></div>
+                            <div class="cake__topper" id="cakeTopper" aria-label="25 岁生日">
+                                <span class="cake__age-num" id="cakeAgeNum">25</span>
+                                <span class="cake__age-th" id="cakeAgeTh">TH</span>
+                            </div>
+                            <div class="cake__candles" id="candles"></div>
+                        </div>
+                    </div>
+                    <p class="s1-blow-msg" id="s1BlowMsg" hidden>OK👏👏👏, 1定会得偿所愿</p>
+                    <div class="s1-panel__actions">
+                        <button type="button" class="btn btn--ghost btn--mic" id="btnMic" aria-label="长按约 1.5 秒开始许愿">
+                            <span class="btn--mic__fill" aria-hidden="true"></span>
+                            <span class="btn--mic__icon" aria-hidden="true"></span>
+                            <span class="btn--mic__label">长按开始许愿</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- ========== Screen 2：结果流程 ========== -->
+        <div id="screen2" class="screen screen--2 s2" hidden data-s2-step="quiz">
+            <header class="s2-top">
+                <span class="s2-top__label">Act II</span>
+                <div class="s2-dots" id="s2Dots" aria-hidden="true"></div>
+            </header>
+
+            <section class="s2-block s2-block--quiz" id="s2Quiz">
+                <h2 class="s2-title" id="quizTitle"></h2>
+                <p class="s2-desc" id="quizDesc"></p>
+                <div class="s2-options" id="quizOpts"></div>
+                <div style="height: 2rem;">
+                    <p class="s2-quiz-err" id="quizErr" hidden role="alert"></p>
+                </div>
+                <button type="button" class="btn btn--ghost" id="quizNext" hidden>下一题</button>
+            </section>
+
+            <section class="s2-block s2-block--scratch" id="s2Scratch" hidden>
+                <h2 class="s2-title">刮刮乐</h2>
+                <p class="s2-desc">手指慢慢涂，像擦掉雾气。</p>
+                <div class="scratch" id="scratchWrap">
+                    <div class="scratch__under">
+                        <p class="scratch__gift">回忆相册 x 1</p>
+                        <p class="scratch__gift2">(附赠：今天和我共进晚餐的机会 x 1 哈哈)</p>
+                    </div>
+                    <canvas class="scratch__canvas" id="scratchCanvas"></canvas>
+                </div>
+                <button type="button" class="btn btn--primary" id="btnScratchNext" disabled>打开礼物</button>
+            </section>
+
+            <section class="s2-block s2-block--gift" id="s2Gift" hidden>
+                <div class="gift-gallery-wrap" id="giftGallery">
+                    <div class="gift-scroll gift-album" id="giftScroll" role="region" aria-label="礼物相册">
+                        <header class="gift-album__head">
+                            <h2 class="s2-title gift-album__title">回忆相册</h2>
+                            <p class="s2-desc gift-album__desc">
+                                这里面好像还塞了个其它的东西
+                            </p>
+                        </header>
+                        <div class="gift-pager-shell">
+                            <div class="gift-pager" id="giftPager" aria-live="polite"></div>
+                            <div class="gift-pager-nav" role="group" aria-label="相册翻页">
+                                <button type="button" class="btn btn--ghost gift-pager__prev" id="giftPagerPrev">
+                                    上一页
+                                </button>
+                                <button type="button" class="btn btn--ghost gift-pager__next" id="giftPagerNext">
+                                    下一张
+                                </button>
+                            </div>
+                        </div>
+                        <div class="gift-toast" id="giftToast" role="status" aria-live="polite" hidden></div>
+                    </div>
+                </div>
+                <div class="gift-letter-wrap" id="giftLetterBlock" hidden>
+                    <h2 class="s2-title">信件</h2>
+                    <p class="s2-desc">哈哈，知道你会不好意思 所以礼物是祝福语 我周到吧</p>
+                    <button type="button" class="envelope" id="btnEnvelope" aria-label="展开信件">
+                        <span class="envelope__flap" aria-hidden="true"></span>
+                        <span class="envelope__body" aria-hidden="true"></span>
+                    </button>
+                    <div class="letter-fold" id="letterFold" hidden>
+                        <div class="letter-fold__inner" id="letterInner"></div>
+                    </div>
+                    <button type="button" class="btn btn--primary" id="btnAfterLetter" hidden
+                        title="请先点开上面的信封，展开信件后再结束">
+                        幕落
+                    </button>
+                </div>
+            </section>
+
+            <section class="s2-block s2-block--end" id="s2End" hidden>
+                <p class="s2-end__eyebrow">Fin</p>
+                <h2 class="s2-end__title">好了，就到这里啦</h2>
+                <p class="s2-end__sub">可以关掉啦 回到现实继续我们的故事吧~</p>
+            </section>
+        </div>
+
+        <!-- 许愿弹窗 -->
+        <div class="modal" id="modalWish" hidden role="dialog" aria-modal="true" aria-labelledby="modalWishTitle">
+            <div class="modal__backdrop" id="modalWishBack"></div>
+            <div class="modal__card">
+                <p id="modalWishTitle" class="modal__title">嘘～小声点</p>
+                <p class="modal__body">愿望说出来就不灵了——所以，留在心里就好（↓↓许愿好了↓↓）。</p>
+                <button type="button" class="btn btn--primary" id="modalWishOk">好了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 有声音无法 autoplay：见 app.js 首次触摸尝试播放 + 右上角音乐按钮 -->
+    <audio id="bgm" preload="auto" playsinline loop>
+        <source src="source/mp3/生日快乐.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
