@@ -1,0 +1,32 @@
+# 操作系统
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 编辑器 / IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# 环境变量与密钥（勿提交）
+.env
+.env.*
+!.env.example
+
+# 可选：本地 Python 虚拟环境（若在本机用脚本）
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# 可选：日后若引入 Node 工具链
+node_modules/
+
+# 日志与临时文件
+*.log
+.tmp/
+temp/
+
+# cdn file
+source/mp3/

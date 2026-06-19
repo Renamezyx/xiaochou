@@ -36,16 +36,16 @@
     "回忆库存快见底啦 😤 该去补充一点新的了，哼！";
 
   /** 默认背景音乐路径；切歌时把新路径传给 playBgmFromUser(src) */
-  var BGM_DEFAULT_SRC = "source/mp3/生日快乐.mp3";
+  var BGM_DEFAULT_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/生日快乐.mp3";
 
   /** 进入 Act II「小问答」面板时切换的 BGM；留空则不自动切歌 */
-  var BGM_QUIZ_SRC = "source/mp3/朋友.mp3";
+  var BGM_QUIZ_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/朋友.mp3";
 
   /** 进入「刮刮乐」面板时切换的 BGM；留空则不自动切歌 */
-  var BGM_SCRATCH_SRC = "source/mp3/你是我的女朋友.mp3";
+  var BGM_SCRATCH_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/你是我的女朋友.mp3";
 
   /** 结束时播放的 BGM；留空则不自动切歌 */
-  var BGM_END_SRC = "source/mp3/多幸运.mp3";
+  var BGM_END_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/多幸运.mp3";
 
   var QUIZ = [
     {
