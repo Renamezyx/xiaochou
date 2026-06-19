@@ -39,7 +39,7 @@
   var BGM_DEFAULT_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/生日快乐.mp3";
 
   /** 进入 Act II「小问答」面板时切换的 BGM；留空则不自动切歌 */
-  var BGM_QUIZ_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/朋友.mp3";
+  var BGM_QUIZ_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/慢慢喜欢你.mp3";
 
   /** 进入「刮刮乐」面板时切换的 BGM；留空则不自动切歌 */
   var BGM_SCRATCH_SRC = "https://therzyx-os-1259094253.cos.ap-guangzhou.myqcloud.com/xiaochou/mp3/你是我的女朋友.mp3";
