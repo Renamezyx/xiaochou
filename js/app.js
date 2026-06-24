@@ -83,6 +83,12 @@
     if (navigator.vibrate) navigator.vibrate(ms || 10);
   }
 
+  function track(event, data) {
+    if (typeof window.track === "function") {
+      window.track(event, data || {});
+    }
+  }
+
   function setHidden(el, on) {
     if (!el) return;
     if (on) el.setAttribute("hidden", "hidden");
@@ -146,6 +152,7 @@
   function setPhase(next) {
     phase = next;
     $("screen1").setAttribute("data-phase", next);
+    track("phase", { phase: next });
   }
 
   function fillFw() {
@@ -407,6 +414,7 @@
   }
 
   function openGiftLetter() {
+    track("letter_block_open");
     if (giftToastTimer) {
       clearTimeout(giftToastTimer);
       giftToastTimer = null;
@@ -558,6 +566,7 @@
   }
 
   function openWishModal() {
+    track("wish_modal_open");
     setHidden($("modalWish"), false);
     haptic(10);
   }
@@ -567,6 +576,7 @@
   }
 
   function goBlowThenS2() {
+    track("s2_enter");
     closeWishModal();
     clearBlowSeqTimers();
     var cakeP = getS1Panel("cake");
@@ -717,6 +727,7 @@
       if (quizIdx < QUIZ.length) {
         renderQuiz();
       } else {
+        track("quiz_complete");
         setHidden($("s2Quiz"), true);
         setHidden($("s2Scratch"), false);
         var scratchEl = $("s2Scratch");
@@ -835,6 +846,7 @@
     });
 
     $("btnScratchNext").onclick = function () {
+      track("gift_open");
       setHidden($("s2Scratch"), true);
       resetGiftScreen();
       setHidden($("s2Gift"), false);
@@ -899,6 +911,7 @@
     }
 
     $("btnEnter").addEventListener("click", function () {
+      track("click", { target: "btn_enter" });
       haptic(14);
       concealS1CopyThen("enter", function () {
         setPhase("talent");
@@ -907,6 +920,7 @@
     });
 
     $("btnTalent").addEventListener("click", function () {
+      track("click", { target: "btn_talent" });
       playBgmFromUser(BGM_DEFAULT_SRC);
       var bt = $("btnTalent");
       if (bt) bt.disabled = true;
@@ -918,6 +932,7 @@
     });
 
     $("btnMore").addEventListener("click", function () {
+      track("click", { target: "btn_more" });
       haptic(12);
       concealS1CopyThen("post_talent", function () {
         clearCandleTimers();
@@ -987,6 +1002,7 @@
       var inner = $("letterInner");
       var block = $("giftLetterBlock");
       if (!env || env.getAttribute("data-open") === "1") return;
+      track("letter_open");
       env.setAttribute("data-open", "1");
       env.classList.add("is-open");
       var afterLetter = $("btnAfterLetter");
@@ -1022,6 +1038,7 @@
     });
 
     $("btnAfterLetter").addEventListener("click", function () {
+      track("finale");
       var s2 = $("screen2");
       if (s2) s2.classList.remove("s2--gift-gallery");
       setHidden($("s2Gift"), true);
