@@ -1,7 +1,3 @@
-/**
- * 轻量访问埋点：sendBeacon / fetch 上报，不阻塞页面。
- * 可在 index.html 里设置 window.TRACK_ENDPOINT = "你的接口地址"
- */
 (function () {
   "use strict";
 

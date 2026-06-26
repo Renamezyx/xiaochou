@@ -33,6 +33,12 @@ jobs:
             ./ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/xiaochou/
 
+      # 埋点日志目录（CentOS php-fpm 默认用户 apache）
+      - name: Prepare logs directory
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "mkdir -p /var/www/xiaochou/logs && chown -R apache:apache /var/www/xiaochou/logs && chmod 775 /var/www/xiaochou/logs"
+
       # 4️⃣ 可选：重启 nginx
       - name: Reload nginx
         run: |
