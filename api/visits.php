@@ -4,7 +4,7 @@
  * 访问：/api/visits.php?key=你设置的密钥
  * 部署后请修改下方 VIEW_KEY
  */
-const VIEW_KEY = 'xiaochou-view-2025';
+const VIEW_KEY = 'therzyx';
 
 $key = $_GET['key'] ?? '';
 if ($key === '' || !hash_equals(VIEW_KEY, $key)) {

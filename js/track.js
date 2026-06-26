@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var ENDPOINT = window.TRACK_ENDPOINT || "/api/track.php";
+  var ENDPOINT = window.TRACK_ENDPOINT || "/xiaochou/api/track.php";
   var STORAGE_VISITOR = "xc_vid";
   var STORAGE_SESSION = "xc_sid";
 
