@@ -134,17 +134,33 @@ function fmtTime($row)
     return date('Y-m-d H:i:s', $ts);
 }
 
-function parseFilterTs($input, $endOfDay)
+function parseFilterTs($input, $isEnd)
 {
     if ($input === '') {
         return null;
     }
-    $input = str_replace('T', ' ', $input);
+    $input = str_replace('T', ' ', trim($input));
     if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $input)) {
-        $input .= $endOfDay ? ' 23:59:59' : ' 00:00:00';
+        $input .= $isEnd ? ' 23:59:59' : ' 00:00:00';
+    } elseif ($isEnd && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $input)) {
+        // datetime-local 无秒：结束时间含该分钟的最后一秒
+        $input .= ':59';
     }
     $ts = strtotime($input);
     return $ts ? (int) $ts : null;
+}
+
+function strContains($haystack, $needle)
+{
+    $needle = trim((string) $needle);
+    if ($needle === '') {
+        return true;
+    }
+    $haystack = (string) $haystack;
+    if (function_exists('mb_stripos')) {
+        return mb_stripos($haystack, $needle, 0, 'UTF-8') !== false;
+    }
+    return stripos($haystack, $needle) !== false;
 }
 
 function eventLabel($event)
@@ -196,10 +212,10 @@ foreach ($allRows as $row) {
     if ($tsTo !== null && ($ts === 0 || $ts > $tsTo)) {
         continue;
     }
-    if ($filterDevice !== '' && arr_get($row, '_device_os', '') !== $filterDevice) {
+    if ($filterDevice !== '' && !strContains(arr_get($row, '_device_os', ''), $filterDevice)) {
         continue;
     }
-    if ($filterIp !== '' && arr_get($row, 'ip', '') !== $filterIp) {
+    if ($filterIp !== '' && !strContains(arr_get($row, 'ip', ''), $filterIp)) {
         continue;
     }
     if ($filterEvent !== '' && arr_get($row, 'event', '') !== $filterEvent) {
@@ -289,6 +305,7 @@ header('Content-Type: text/html; charset=utf-8');
     .event { color: #8b5a2b; }
     .ua { max-width: 280px; word-break: break-all; color: #888; font-size: 12px; }
     .empty { text-align: center; color: #999; padding: 24px; }
+    .hint { color: #a67c52; font-size: 13px; margin: -8px 0 16px; }
     @media (max-width: 900px) {
       .filters label { width: 100%; }
       .filters input, .filters select { width: 100%; }
@@ -311,7 +328,7 @@ header('Content-Type: text/html; charset=utf-8');
     <?php endif; ?>
   </p>
 
-  <form class="filters" method="get" action="">
+  <form class="filters" method="get" action="visits.php">
     <input type="hidden" name="key" value="<?= h($key) ?>" />
     <label>
       开始时间
@@ -369,6 +386,10 @@ header('Content-Type: text/html; charset=utf-8');
       <a class="btn btn--ghost" href="?key=<?= urlencode($key) ?>">重置</a>
     </div>
   </form>
+
+  <?php if (!$rows && ($filterFrom !== '' || $filterTo !== '' || $filterDevice !== '' || $filterIp !== '' || $filterEvent !== '')): ?>
+  <p class="hint">当前筛选条件下没有记录。可尝试缩短关键词、放宽时间范围，或点击「重置」。</p>
+  <?php endif; ?>
 
   <table>
     <thead>
