@@ -1,7 +1,7 @@
 <?php
 /**
  * 访问埋点收集：追加写入 logs/visits.jsonl
- * 需服务器启用 PHP（nginx + php-fpm）
+ * 兼容 PHP 5.4+
  */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -19,9 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-function getClientIp(): string
+function arr_get($arr, $key, $default)
 {
-    $keys = ['HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CF_CONNECTING_IP', 'REMOTE_ADDR'];
+    return isset($arr[$key]) ? $arr[$key] : $default;
+}
+
+function getClientIp()
+{
+    $keys = array('HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CF_CONNECTING_IP', 'REMOTE_ADDR');
     foreach ($keys as $key) {
         if (empty($_SERVER[$key])) {
             continue;
@@ -40,7 +45,7 @@ function getClientIp(): string
     return '';
 }
 
-function parseUa(string $ua): array
+function parseUa($ua)
 {
     $tablet = (bool) preg_match('/iPad|Tablet|Android(?!.*Mobile)/i', $ua);
     $mobile = !$tablet && (bool) preg_match('/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i', $ua);
@@ -87,16 +92,16 @@ function parseUa(string $ua): array
         $model = trim($m[1]);
     }
 
-    $parts = array_filter([$model, $os, $browser, $deviceType]);
+    $parts = array_filter(array($model, $os, $browser, $deviceType));
     $summary = implode(' · ', $parts);
 
-    return [
+    return array(
         'device_type' => $deviceType,
         'os' => $os,
         'browser' => $browser,
         'model' => $model,
         'device' => $summary,
-    ];
+    );
 }
 
 $raw = file_get_contents('php://input');
@@ -108,23 +113,23 @@ if (!is_array($data)) {
     exit;
 }
 
-$ua = (string) ($data['ua'] ?? '');
+$ua = (string) arr_get($data, 'ua', '');
 $parsed = parseUa($ua);
 
 $data['ip'] = getClientIp();
 $data['server_ts'] = round(microtime(true) * 1000);
 
-foreach (['device_type', 'os', 'browser', 'model'] as $field) {
+foreach (array('device_type', 'os', 'browser', 'model') as $field) {
     if (empty($data[$field]) && !empty($parsed[$field])) {
         $data[$field] = $parsed[$field];
     }
 }
 
-$model = (string) ($data['model'] ?? $parsed['model']);
-$os = (string) ($data['os'] ?? $parsed['os']);
-$browser = (string) ($data['browser'] ?? $parsed['browser']);
-$deviceType = (string) ($data['device_type'] ?? $parsed['device_type']);
-$data['device'] = implode(' · ', array_filter([$model, $os, $browser, $deviceType]));
+$model = (string) arr_get($data, 'model', arr_get($parsed, 'model', ''));
+$os = (string) arr_get($data, 'os', arr_get($parsed, 'os', ''));
+$browser = (string) arr_get($data, 'browser', arr_get($parsed, 'browser', ''));
+$deviceType = (string) arr_get($data, 'device_type', arr_get($parsed, 'device_type', ''));
+$data['device'] = implode(' · ', array_filter(array($model, $os, $browser, $deviceType)));
 
 $logDir = dirname(__DIR__) . '/logs';
 if (!is_dir($logDir) && !mkdir($logDir, 0750, true)) {
@@ -134,7 +139,14 @@ if (!is_dir($logDir) && !mkdir($logDir, 0750, true)) {
     exit;
 }
 
-$line = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
+$flags = 0;
+if (defined('JSON_UNESCAPED_UNICODE')) {
+    $flags |= JSON_UNESCAPED_UNICODE;
+}
+if (defined('JSON_UNESCAPED_SLASHES')) {
+    $flags |= JSON_UNESCAPED_SLASHES;
+}
+$line = json_encode($data, $flags) . "\n";
 if (file_put_contents($logDir . '/visits.jsonl', $line, FILE_APPEND | LOCK_EX) === false) {
     http_response_code(500);
     header('Content-Type: application/json; charset=utf-8');

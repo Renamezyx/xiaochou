@@ -1,13 +1,17 @@
 <?php
 /**
  * 访问记录查看页（需密钥）
- * 访问：/api/visits.php?key=你设置的密钥
- * 部署后请修改下方 VIEW_KEY
+ * 访问：/xiaochou/api/visits.php?key=你设置的密钥
  */
-const VIEW_KEY = 'therzyx';
+define('VIEW_KEY', 'therzyx');
 
-$key = $_GET['key'] ?? '';
-if ($key === '' || !hash_equals(VIEW_KEY, $key)) {
+function arr_get($arr, $key, $default)
+{
+    return isset($arr[$key]) ? $arr[$key] : $default;
+}
+
+$key = isset($_GET['key']) ? $_GET['key'] : '';
+if ($key === '' || $key !== VIEW_KEY) {
     http_response_code(403);
     header('Content-Type: text/plain; charset=utf-8');
     echo 'Forbidden';
@@ -15,7 +19,7 @@ if ($key === '' || !hash_equals(VIEW_KEY, $key)) {
 }
 
 $logFile = dirname(__DIR__) . '/logs/visits.jsonl';
-$rows = [];
+$rows = array();
 
 if (is_file($logFile)) {
     $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -29,9 +33,9 @@ if (is_file($logFile)) {
     }
 }
 
-function fmtTime(array $row): string
+function fmtTime($row)
 {
-    $ts = $row['server_ts'] ?? $row['ts'] ?? 0;
+    $ts = arr_get($row, 'server_ts', arr_get($row, 'ts', 0));
     if (!$ts) {
         return '-';
     }
@@ -41,7 +45,7 @@ function fmtTime(array $row): string
     return date('Y-m-d H:i:s', $ts);
 }
 
-function h($v): string
+function h($v)
 {
     return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
 }
@@ -101,7 +105,7 @@ header('Content-Type: text/html; charset=utf-8');
                 $screen .= ' @' . $row['dpr'] . 'x';
             }
         }
-        $detail = [];
+        $detail = array();
         if (!empty($row['phase'])) {
             $detail[] = '阶段: ' . $row['phase'];
         }
@@ -111,15 +115,19 @@ header('Content-Type: text/html; charset=utf-8');
         if (!empty($row['path'])) {
             $detail[] = $row['path'];
         }
+        $detailStr = implode(' · ', $detail);
+        if ($detailStr === '') {
+            $detailStr = '-';
+        }
       ?>
       <tr>
         <td data-label="时间"><?= h(fmtTime($row)) ?></td>
-        <td data-label="IP" class="ip"><?= h($row['ip'] ?? '-') ?></td>
-        <td data-label="设备"><?= h($row['device'] ?? '-') ?></td>
-        <td data-label="屏幕"><?= h($screen ?: '-') ?></td>
-        <td data-label="事件" class="event"><?= h($row['event'] ?? '-') ?></td>
-        <td data-label="详情"><?= h(implode(' · ', $detail) ?: '-') ?></td>
-        <td data-label="UA" class="ua"><?= h($row['ua'] ?? '') ?></td>
+        <td data-label="IP" class="ip"><?= h(arr_get($row, 'ip', '-')) ?></td>
+        <td data-label="设备"><?= h(arr_get($row, 'device', '-')) ?></td>
+        <td data-label="屏幕"><?= h($screen !== '' ? $screen : '-') ?></td>
+        <td data-label="事件" class="event"><?= h(arr_get($row, 'event', '-')) ?></td>
+        <td data-label="详情"><?= h($detailStr) ?></td>
+        <td data-label="UA" class="ua"><?= h(arr_get($row, 'ua', '')) ?></td>
       </tr>
       <?php endforeach; ?>
       <?php endif; ?>
