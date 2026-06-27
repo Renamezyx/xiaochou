@@ -1,7 +1,7 @@
 <?php
 /**
  * 访问记录查看页（需密钥）
- * 访问：/xiaochou/api/visits.php?key=你设置的密钥
+ * 访问：/xiaoqiu/api/visits.php?key=你设置的密钥
  */
 define('VIEW_KEY', 'therzyx');
 
