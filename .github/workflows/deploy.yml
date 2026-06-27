@@ -25,10 +25,11 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # 3️⃣ 🚀 删除旧文件 + 同步新文件（核心）
+      # 3️⃣ 同步新文件（--delete 会删远端多余文件；排除 logs/ 以保留 visits.jsonl）
       - name: Deploy (clean + sync)
         run: |
           rsync -avz --delete \
+            --exclude 'logs/' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/xiaochou/
