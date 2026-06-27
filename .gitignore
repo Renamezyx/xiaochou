@@ -25,6 +25,7 @@ node_modules/
 
 # 日志与临时文件
 *.log
+logs/*.jsonl
 .tmp/
 temp/
 log/
