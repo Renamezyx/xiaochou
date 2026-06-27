@@ -42,7 +42,9 @@ function fmtTime($row)
     if ($ts > 9999999999) {
         $ts = (int) round($ts / 1000);
     }
-    return date('Y-m-d H:i:s', $ts);
+    $dt = new DateTime('@' . $ts);
+    $dt->setTimezone(new DateTimeZone('Asia/Shanghai'));
+    return $dt->format('Y-m-d H:i:s');
 }
 
 function h($v)
@@ -83,7 +85,7 @@ header('Content-Type: text/html; charset=utf-8');
   <table>
     <thead>
       <tr>
-        <th>时间</th>
+        <th>时间 (UTC+8)</th>
         <th>IP</th>
         <th>设备</th>
         <th>屏幕</th>
